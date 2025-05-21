@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.manictime</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="70"/>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//app[@data-string='General Settings']" position="after">
+                <app data-string="ManicTime" string="ManicTime" name="manictime_server" groups="manictime_server.group_manictime_manager">
+                    <h2>ManicTime Server Settings</h2>
+                    <div class="row mt16 o_settings_container" id="manictime_settings">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Server Configuration</span>
+                                <div class="text-muted">
+                                    Configure the default ManicTime server settings
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label class="col-lg-3 o_light_label" string="Server URL" for="manictime_server_url"/>
+                                        <field name="manictime_server_url" placeholder="https://manictime-server.example.com"/>
+                                    </div>
+                                    <div class="mt16 row">
+                                        <label class="col-lg-3 o_light_label" string="Auth Type" for="manictime_auth_type"/>
+                                        <field name="manictime_auth_type"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane"/>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Synchronization Settings</span>
+                                <div class="text-muted">
+                                    Configure how ManicTime data is synchronized
+                                </div>
+                                <div class="content-group">
+                                    <div class="mt16 row">
+                                        <label class="col-lg-3 o_light_label" string="Sync Interval" for="manictime_sync_interval"/>
+                                        <field name="manictime_sync_interval"/> days
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="manictime_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'manictime_server'}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ManicTime Configuration Form View -->
+    <record id="view_manictime_config_form" model="ir.ui.view">
+        <field name="name">manictime.config.form</field>
+        <field name="model">manictime.config</field>
+        <field name="arch" type="xml">
+            <form string="ManicTime Configuration">
+                <sheet>
+                    <!-- No need for enabled ribbon, existence of config means it's enabled -->
+                    <div class="oe_title">
+                        <h1>
+                            <field name="user_id" options="{'no_create': True, 'no_edit': True}" placeholder="User"/>
+                        </h1>
+                    </div>
+
+                    <!-- All configurations are enabled by default -->
+
+                    <div>
+                        <!-- Authentication Status -->
+                        <div class="alert alert-success d-flex align-items-center" role="alert"
+                             invisible="not token_expiry or token_expiry &lt; context_today().strftime('%Y-%m-%d')">
+                            <i class="fa fa-check-circle me-2" role="img" aria-label="Success" title="Success"/>
+                            <div>
+                                <strong>Connected to ManicTime</strong>
+                                <div>Authentication is valid until <field name="token_expiry" readonly="1" widget="date"/></div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning d-flex align-items-center" role="alert"
+                             invisible="token_expiry and token_expiry > context_today().strftime('%Y-%m-%d')">
+                            <i class="fa fa-exclamation-triangle me-2" role="img" aria-label="Warning" title="Warning"/>
+                            <div>
+                                <strong>Not Connected to ManicTime</strong>
+                                <div>Please authenticate to use the ManicTime integration</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="auth_type" required="True"/>
+                            <field name="client_id_username" required="True"/>
+                            <field name="temp_secret" password="True"
+                                   required="not token_expiry"/>
+                        </group>
+                        <group>
+                            <field name="last_sync" readonly="1"/>
+                            <field name="auto_reauth"/>
+                            <field name="sync_by_default"/>
+                        </group>
+                    </group>
+
+                    <div class="mt-3 mb-3">
+                        <!-- Action Buttons -->
+                        <div class="d-flex">
+                            <button name="action_authenticate" string="Connect to ManicTime"
+                                    type="object" class="btn btn-primary me-2"
+                                    invisible="token_expiry > context_today().strftime('%Y-%m-%d')"/>
+
+                            <button name="action_revoke_auth" string="Disconnect"
+                                    type="object" class="btn btn-danger me-2"
+                                    invisible="not token_expiry or token_expiry &lt; context_today().strftime('%Y-%m-%d')"/>
+
+                            <button name="action_sync_data" string="Sync All Data"
+                                    type="object" class="btn btn-secondary"
+                                    invisible="not token_expiry or token_expiry &lt; context_today().strftime('%Y-%m-%d')"/>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ManicTime Configuration list View -->
+    <record id="view_manictime_config_list" model="ir.ui.view">
+        <field name="name">manictime.config.list</field>
+        <field name="model">manictime.config</field>
+        <field name="arch" type="xml">
+            <list string="ManicTime Configurations" decoration-success="token_expiry and token_expiry > context_today().strftime('%Y-%m-%d')" decoration-danger="not token_expiry or token_expiry &lt; context_today().strftime('%Y-%m-%d')">
+                <field name="user_id"/>
+                <!-- All configs are enabled by default -->
+                <field name="auth_type"/>
+                <field name="client_id_username"/>
+                <field name="token_expiry"/>
+                <field name="last_sync"/>
+                <field name="auto_reauth"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ManicTime Configuration Search View -->
+    <record id="view_manictime_config_search" model="ir.ui.view">
+        <field name="name">manictime.config.search</field>
+        <field name="model">manictime.config</field>
+        <field name="arch" type="xml">
+            <search string="Search ManicTime Configurations">
+                <field name="user_id"/>
+                <field name="client_id_username"/>
+                <!-- All configs are enabled by default -->
+                <filter string="Authenticated" name="authenticated" domain="[('token_expiry', '>', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Not Authenticated" name="not_authenticated" domain="['|', ('token_expiry', '=', False), ('token_expiry', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Auto Reauthentication" name="auto_reauth" domain="[('auto_reauth', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Authentication Type" name="auth_type" context="{'group_by': 'auth_type'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ManicTime Configuration Action -->
+    <record id="action_manictime_config" model="ir.actions.act_window">
+        <field name="name">User Configurations</field>
+        <field name="res_model">manictime.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_manictime_config_list"/>
+        <field name="search_view_id" ref="view_manictime_config_search"/>
+        <field name="path">manictime-user-config</field>
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(4, ref('manictime_server.group_manictime_manager'))]"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Link list/List View -->
+    <record id="view_manictime_link_list" model="ir.ui.view">
+        <field name="name">manictime.link.list</field>
+        <field name="model">manictime.link</field>
+        <field name="arch" type="xml">
+            <list string="API Capabilities">
+                <field name="rel"/>
+                <field name="pattern"/>
+                <field name="timeline_count"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Link Form View -->
+    <record id="view_manictime_link_form" model="ir.ui.view">
+        <field name="name">manictime.link.form</field>
+        <field name="model">manictime.link</field>
+        <field name="arch" type="xml">
+            <form string="API Capability">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="rel"/>
+                            <field name="pattern" placeholder="https://example.com/timelines/{timeline_key}/activities"/>
+                        </group>
+                        <group>
+                            <field name="timeline_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Timelines" name="timelines">
+                            <field name="timeline_ids"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Link Search View -->
+    <record id="view_manictime_link_search" model="ir.ui.view">
+        <field name="name">manictime.link.search</field>
+        <field name="model">manictime.link</field>
+        <field name="arch" type="xml">
+            <search string="Search API Capabilities">
+                <field name="rel"/>
+                <field name="pattern"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- Link Action -->
+    <record id="action_manictime_link" model="ir.actions.act_window">
+        <field name="name">API Capabilities</field>
+        <field name="res_model">manictime.link</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_manictime_link_list"/>
+        <field name="search_view_id" ref="view_manictime_link_search"/>
+        <field name="path">manictime-api-capabilities</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No API capabilities found
+            </p>
+            <p>
+                API capabilities are automatically identified during timeline synchronization.
+                They represent the different types of API endpoints available for timelines.
+            </p>
+        </field>
+    </record>
+</odoo>

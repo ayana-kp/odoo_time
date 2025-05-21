@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Form View -->
+    <record id="manictime_project_mapping_view_form" model="ir.ui.view">
+        <field name="name">manictime.project.mapping.form</field>
+        <field name="model">manictime.project.mapping</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="project_id"/>
+                            <field name="task_id" domain="[('project_id', '=', project_id)]"/>
+                        </group>
+                        <group>
+                            <field name="manictime_tag"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- list View -->
+    <record id="manictime_project_mapping_view_list" model="ir.ui.view">
+        <field name="name">manictime.project.mapping.list</field>
+        <field name="model">manictime.project.mapping</field>
+        <field name="arch" type="xml">
+            <list string="ManicTime Project Mappings">
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="manictime_tag"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="manictime_project_mapping_view_search" model="ir.ui.view">
+        <field name="name">manictime.project.mapping.search</field>
+        <field name="model">manictime.project.mapping</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="manictime_tag"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Project" name="group_by_project" context="{'group_by': 'project_id'}"/>
+                    <filter string="Task" name="group_by_task" context="{'group_by': 'task_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="manictime_project_mapping_action" model="ir.actions.act_window">
+        <field name="name">ManicTime Project Mappings</field>
+        <field name="res_model">manictime.project.mapping</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="manictime_project_mapping_view_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a new ManicTime project mapping
+            </p>
+            <p>
+                Map ManicTime tags (e.g., "038", "042") to Odoo projects and tasks
+                to display ManicTime billable hours in your timesheet grid.
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_manictime_project_mapping"
+              name="Project Mappings"
+              parent="manictime_server.menu_manictime_config"
+              action="manictime_project_mapping_action"
+              sequence="20"/>
+</odoo>

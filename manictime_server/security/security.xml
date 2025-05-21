@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ManicTime Security Groups -->
+    <record id="group_manictime_user" model="res.groups">
+        <field name="name">ManicTime User</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="comment">Users who can see their own ManicTime data</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <record id="group_manictime_manager" model="res.groups">
+        <field name="name">ManicTime Manager</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="comment">Users who can manage ManicTime configurations and see all users' data</field>
+        <field name="implied_ids" eval="[(4, ref('group_manictime_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_admin'))]"/>
+    </record>
+
+    <!-- Record Rules -->
+    <!-- Users can only see their own ManicTime activities -->
+    <record id="rule_manictime_activity_user" model="ir.rule">
+        <field name="name">User sees only own ManicTime activities</field>
+        <field name="model_id" ref="model_manictime_activity"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Managers can see all ManicTime activities -->
+    <record id="rule_manictime_activity_manager" model="ir.rule">
+        <field name="name">Manager sees all ManicTime activities</field>
+        <field name="model_id" ref="model_manictime_activity"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Users can only see their own tag combinations -->
+    <record id="rule_manictime_tag_combination_user" model="ir.rule">
+        <field name="name">User sees only own ManicTime tag combinations</field>
+        <field name="model_id" ref="model_manictime_tag_combination"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Managers can see all tag combinations -->
+    <record id="rule_manictime_tag_combination_manager" model="ir.rule">
+        <field name="name">Manager sees all ManicTime tag combinations</field>
+        <field name="model_id" ref="model_manictime_tag_combination"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Users can only see their own timelines -->
+    <record id="rule_manictime_user_timeline_user" model="ir.rule">
+        <field name="name">User sees only own ManicTime timelines</field>
+        <field name="model_id" ref="model_manictime_user_timeline"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Managers can see all timelines -->
+    <record id="rule_manictime_user_timeline_manager" model="ir.rule">
+        <field name="name">Manager sees all ManicTime timelines</field>
+        <field name="model_id" ref="model_manictime_user_timeline"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    
+    <!-- Schema Rules -->
+    <!-- Users can see all schemas (read-only) -->
+    <record id="rule_manictime_schema_user" model="ir.rule">
+        <field name="name">User can see all ManicTime schemas</field>
+        <field name="model_id" ref="model_manictime_schema"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    
+    <!-- Managers can manage all schemas -->
+    <record id="rule_manictime_schema_manager" model="ir.rule">
+        <field name="name">Manager can manage all ManicTime schemas</field>
+        <field name="model_id" ref="model_manictime_schema"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    
+    <!-- Environment Rules -->
+    <!-- Users can only see environments for their timelines -->
+    <record id="rule_manictime_environment_user" model="ir.rule">
+        <field name="name">User can see environments for their timelines</field>
+        <field name="model_id" ref="model_manictime_environment"/>
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    
+    <!-- Managers can manage all environments -->
+    <record id="rule_manictime_environment_manager" model="ir.rule">
+        <field name="name">Manager can manage all environments</field>
+        <field name="model_id" ref="model_manictime_environment"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+    
+    <!-- Link Rules -->
+    <!-- Users can only see links for their timelines -->
+    <record id="rule_manictime_link_user" model="ir.rule">
+        <field name="name">User can see links for their timelines</field>
+        <field name="model_id" ref="model_manictime_link"/>
+        <field name="domain_force">[('timeline_ids.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_user'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
+    
+    <!-- Managers can manage all links -->
+    <record id="rule_manictime_link_manager" model="ir.rule">
+        <field name="name">Manager can manage all links</field>
+        <field name="model_id" ref="model_manictime_link"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('group_manictime_manager'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>

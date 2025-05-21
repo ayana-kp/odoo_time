@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- User Form View - ManicTime Tab -->
+    <record id="view_users_form_manictime" model="ir.ui.view">
+        <field name="name">res.users.form.manictime</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="ManicTime Integration" name="manictime_settings" invisible="not manictime_enabled">
+                    <group>
+                        <field name="manictime_enabled" invisible="True"/>
+                    </group>
+
+                    <div invisible="not manictime_enabled">
+                        <!-- Authentication Status -->
+                        <div class="alert alert-success d-flex align-items-center" role="alert"
+                             invisible="not manictime_token_expiry or manictime_token_expiry &lt; context_today().strftime('%Y-%m-%d')">
+                            <i class="fa fa-check-circle me-2" role="img" aria-label="Success" title="Success"/>
+                            <div>
+                                <strong>Connected to ManicTime</strong>
+                                <div>Your authentication is valid until <field name="manictime_token_expiry" readonly="1" widget="date"/></div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning d-flex align-items-center" role="alert"
+                             invisible="manictime_token_expiry and manictime_token_expiry > context_today().strftime('%Y-%m-%d')">
+                            <i class="fa fa-exclamation-triangle me-2" role="img" aria-label="Warning" title="Warning"/>
+                            <div>
+                                <strong>Not Connected to ManicTime</strong>
+                                <div>Please authenticate to use the ManicTime integration</div>
+                            </div>
+                        </div>
+                    </div>
+                    <group invisible="not manictime_enabled">
+
+                        <group>
+                            <field name="manictime_auth_type" required="manictime_enabled"/>
+                            <field name="manictime_client_id_username"
+                                   required="manictime_enabled"/>
+                            <field name="manictime_temp_secret" password="True"
+                                   required="manictime_enabled and not manictime_token_expiry"/>
+                        </group>
+                        <group>
+                            <field name="manictime_token_expiry" readonly="1"/>
+                            <field name="manictime_last_sync" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <div invisible="not manictime_enabled" class="mt-3 mb-3">
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex">
+                            <button name="manictime_authenticate" string="Connect to ManicTime"
+                                    type="object" class="btn btn-primary me-2"
+                                    invisible="manictime_token_expiry > context_today().strftime('%Y-%m-%d')"/>
+
+                            <button name="manictime_revoke_auth" string="Disconnect"
+                                    type="object" class="btn btn-danger me-2"
+                                    invisible="not manictime_token_expiry or manictime_token_expiry &lt; context_today().strftime('%Y-%m-%d')"/>
+
+                            <button name="manictime_sync_data" string="Sync All Data"
+                                    type="object" class="btn btn-secondary me-2"
+                                    invisible="not manictime_token_expiry or manictime_token_expiry &lt; context_today().strftime('%Y-%m-%d')"/>
+
+                            <button name="manictime_sync_all_tags" string="Sync All User &amp; Team Tags"
+                                    type="object" class="btn btn-info"
+                                    groups="manictime_server.group_manictime_manager"
+                                    invisible="not manictime_token_expiry or manictime_token_expiry &lt; context_today().strftime('%Y-%m-%d')"
+                                    title="Sync tag combinations from all users and teams (admin only)"/>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- HR Profile Form View - ManicTime Integration -->
+    <record id="res_users_view_form_profile_manictime" model="ir.ui.view">
+        <field name="name">res.users.preferences.form.profile.manictime</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="hr.res_users_view_form_profile"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="ManicTime Integration" name="manictime_settings" invisible="not manictime_enabled">
+                    <group>
+                        <field name="manictime_enabled" invisible="True"/>
+                    </group>
+
+                    <div invisible="not manictime_enabled">
+                        <!-- Authentication Status -->
+                        <div class="alert alert-success d-flex align-items-center" role="alert"
+                             invisible="not manictime_token_expiry or manictime_token_expiry &lt; context_today().strftime('%Y-%m-%d')">
+                            <i class="fa fa-check-circle me-2" role="img" aria-label="Success" title="Success"/>
+                            <div>
+                                <strong>Connected to ManicTime</strong>
+                                <div>Your authentication is valid until <field name="manictime_token_expiry" readonly="1" widget="date"/></div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-warning d-flex align-items-center" role="alert"
+                             invisible="manictime_token_expiry and manictime_token_expiry > context_today().strftime('%Y-%m-%d')">
+                            <i class="fa fa-exclamation-triangle me-2" role="img" aria-label="Warning" title="Warning"/>
+                            <div>
+                                <strong>Not Connected to ManicTime</strong>
+                                <div>Please authenticate to use the ManicTime integration</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <group invisible="not manictime_enabled">
+                        <group>
+                            <field name="manictime_auth_type" required="manictime_enabled"/>
+                            <field name="manictime_client_id_username"
+                                   required="manictime_enabled" readonly="not can_edit"/>
+                            <field name="manictime_temp_secret" password="True"
+                                   required="manictime_enabled and not manictime_token_expiry"/>
+                        </group>
+                        <group>
+                            <field name="manictime_token_expiry" readonly="1"/>
+                            <field name="manictime_last_sync" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <div invisible="not manictime_enabled" class="mt-3 mb-3">
+                        <!-- Action Buttons -->
+                        <div class="d-flex">
+                            <button name="manictime_authenticate" string="Connect to ManicTime"
+                                    type="object" class="btn btn-primary me-2"
+                                    invisible="manictime_token_expiry > context_today().strftime('%Y-%m-%d')"/>
+
+                            <button name="manictime_revoke_auth" string="Disconnect"
+                                    type="object" class="btn btn-danger me-2"
+                                    invisible="not manictime_token_expiry or manictime_token_expiry &lt; context_today().strftime('%Y-%m-%d')"/>
+
+                            <button name="manictime_sync_data" string="Sync All Data"
+                                    type="object" class="btn btn-secondary me-2"
+                                    invisible="not manictime_token_expiry or manictime_token_expiry &lt; context_today().strftime('%Y-%m-%d')"/>
+
+                            <button name="manictime_sync_all_tags" string="Sync All User &amp; Team Tags"
+                                    type="object" class="btn btn-info"
+                                    groups="manictime_server.group_manictime_manager"
+                                    invisible="not manictime_token_expiry or manictime_token_expiry &lt; context_today().strftime('%Y-%m-%d')"
+                                    title="Sync tag combinations from all users and teams (admin only)"/>
+                        </div>
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

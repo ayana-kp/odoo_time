@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- List View for ManicTime Activities -->
+        <record id="view_manictime_activity_list" model="ir.ui.view">
+            <field name="name">manictime.activity.list</field>
+            <field name="model">manictime.activity</field>
+            <field name="arch" type="xml">
+                <list string="ManicTime Activities" create="false">
+                    <field name="user_id"/>
+                    <field name="name"/>
+                    <field name="application"/>
+                    <field name="start_time"/>
+                    <field name="end_time"/>
+                    <field name="duration" widget="float_time"/>
+                    <field name="tags"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Calendar View for ManicTime Activities -->
+        <record id="view_manictime_activity_calendar" model="ir.ui.view">
+            <field name="name">manictime.activity.calendar</field>
+            <field name="model">manictime.activity</field>
+            <field name="arch" type="xml">
+                <calendar string="ManicTime Activities" date_start="start_time" date_stop="end_time" color="user_id" create="false" edit="false" scales="month,week,day" mode="month">
+                    <field name="name"/>
+                    <field name="application"/>
+                    <field name="duration" widget="float_time"/>
+                </calendar>
+            </field>
+        </record>
+
+        <!-- Form View for ManicTime Activities -->
+        <record id="view_manictime_activity_form" model="ir.ui.view">
+            <field name="name">manictime.activity.form</field>
+            <field name="model">manictime.activity</field>
+            <field name="arch" type="xml">
+                <form string="ManicTime Activity" create="false" edit="false">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="user_id"/>
+                                <field name="name"/>
+                                <field name="timeline_id"/>
+                                <field name="application"/>
+                            </group>
+                            <group>
+                                <field name="start_time"/>
+                                <field name="end_time"/>
+                                <field name="duration" widget="float_time"/>
+                                <field name="tags"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Notes" name="notes">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View for ManicTime Activities -->
+        <record id="view_manictime_activity_search" model="ir.ui.view">
+            <field name="name">manictime.activity.search</field>
+            <field name="model">manictime.activity</field>
+            <field name="arch" type="xml">
+                <search string="Search ManicTime Activities">
+                    <field name="name"/>
+                    <field name="user_id"/>
+                    <field name="timeline_id"/>
+                    <field name="application"/>
+                    <field name="tags"/>
+                    <filter string="My Activities" name="my_activities" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Today" name="today" domain="[('start_time', '&gt;=', context_today().strftime('%Y-%m-%d')), ('start_time', '&lt;', (context_today() + relativedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Week" name="this_week" domain="[('start_time', '>=', (context_today() + relativedelta(weeks=-1, days=1, weekday=0)).strftime('%Y-%m-%d')), ('start_time', '&lt;', (context_today() + relativedelta(days=1, weekday=6)).strftime('%Y-%m-%d'))]"/>
+                    <filter string="This Month" name="this_month" domain="[('start_time', '>=', (context_today().replace(day=1)).strftime('%Y-%m-%d')), ('start_time', '&lt;', (context_today() + relativedelta(months=1, day=1)).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="User" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                        <filter string="Application" name="group_by_app" context="{'group_by': 'application'}"/>
+                        <filter string="Timeline" name="group_by_timeline" context="{'group_by': 'timeline_id'}"/>
+                        <filter string="Date" name="group_by_date" context="{'group_by': 'start_time:day'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Graph View for ManicTime Activities -->
+        <record id="view_manictime_activity_graph" model="ir.ui.view">
+            <field name="name">manictime.activity.graph</field>
+            <field name="model">manictime.activity</field>
+            <field name="arch" type="xml">
+                <graph string="Activities Analysis" type="bar">
+                    <field name="user_id"/>
+                    <field name="application"/>
+                    <field name="duration" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Pivot View for ManicTime Activities -->
+        <record id="view_manictime_activity_pivot" model="ir.ui.view">
+            <field name="name">manictime.activity.pivot</field>
+            <field name="model">manictime.activity</field>
+            <field name="arch" type="xml">
+                <pivot string="Activities Analysis">
+                    <field name="user_id" type="row"/>
+                    <field name="application" type="row"/>
+                    <field name="start_time" interval="day" type="col"/>
+                    <field name="duration" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- My Activities Action -->
+        <record id="action_manictime_my_activities" model="ir.actions.act_window">
+            <field name="name">My Activities</field>
+            <field name="res_model">manictime.activity</field>
+            <field name="path">my-manictime-activities</field>
+            <field name="view_mode">list,calendar,pivot,graph,form</field>
+            <field name="search_view_id" ref="view_manictime_activity_search"/>
+            <field name="domain">[('user_id', '=', uid)]</field>
+            <field name="context">{'search_default_my_activities': 1}</field>
+        </record>
+
+        <!-- All Activities (Manager) Action -->
+        <record id="action_manictime_all_activities" model="ir.actions.act_window">
+            <field name="name">All Activities</field>
+            <field name="res_model">manictime.activity</field>
+            <field name="path">all-manictime-activities</field>
+            <field name="view_mode">list,calendar,pivot,graph,form</field>
+            <field name="search_view_id" ref="view_manictime_activity_search"/>
+            <field name="groups_id" eval="[(4, ref('manictime_server.group_manictime_manager'))]"/>
+        </record>
+    </data>
+</odoo>

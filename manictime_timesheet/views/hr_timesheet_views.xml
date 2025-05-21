@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Override timesheet grid view to use our custom view -->
+    <record id="timesheet_view_grid_manictime" model="ir.ui.view">
+        <field name="name">timesheet.view.grid.manictime</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="timesheet_grid.timesheet_view_grid"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <grid position="attributes">
+                <attribute name="js_class">manictime_timesheet_grid</attribute>
+            </grid>
+        </field>
+    </record>
+
+    <!-- Extend timesheet list view to show ManicTime hours -->
+    <record id="hr_timesheet_line_list_inherit_manictime" model="ir.ui.view">
+        <field name="name">account.analytic.line.list.inherit.manictime</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="manictime_hours" widget="float_time" string="ManicTime Hours" optional="show"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Extend timesheet form view to show ManicTime hours -->
+    <record id="hr_timesheet_line_form_inherit_manictime" model="ir.ui.view">
+        <field name="name">account.analytic.line.form.inherit.manictime</field>
+        <field name="model">account.analytic.line</field>
+        <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='unit_amount']" position="after">
+                <field name="manictime_hours" widget="float_time" string="ManicTime Hours" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

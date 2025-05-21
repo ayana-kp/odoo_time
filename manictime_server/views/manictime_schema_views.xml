@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ManicTime Schema Form View -->
+    <record id="view_manictime_schema_form" model="ir.ui.view">
+        <field name="name">manictime.schema.form</field>
+        <field name="model">manictime.schema</field>
+        <field name="arch" type="xml">
+            <form string="ManicTime Schema">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" class="oe_inline"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="version"/>
+                            <field name="base_schema_id"/>
+                        </group>
+                        <group>
+                            <field name="timeline_ids" widget="many2many_tags" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ManicTime Schema List View -->
+    <record id="view_manictime_schema_list" model="ir.ui.view">
+        <field name="name">manictime.schema.list</field>
+        <field name="model">manictime.schema</field>
+        <field name="arch" type="xml">
+            <list string="ManicTime Schemas">
+                <field name="name"/>
+                <field name="version"/>
+                <field name="base_schema_id"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ManicTime Schema Search View -->
+    <record id="view_manictime_schema_search" model="ir.ui.view">
+        <field name="name">manictime.schema.search</field>
+        <field name="model">manictime.schema</field>
+        <field name="arch" type="xml">
+            <search string="Search ManicTime Schemas">
+                <field name="name"/>
+                <field name="version"/>
+                <field name="base_schema_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Base Schema" name="base_schema_id" context="{'group_by': 'base_schema_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ManicTime Schema Action -->
+    <record id="action_manictime_schema" model="ir.actions.act_window">
+        <field name="name">Schemas</field>
+        <field name="res_model">manictime.schema</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_manictime_schema_list"/>
+        <field name="search_view_id" ref="view_manictime_schema_search"/>
+        <field name="path">manictime-schemas</field>
+        <field name="context">{}</field>
+        <field name="groups_id" eval="[(4, ref('manictime_server.group_manictime_manager'))]"/>
+    </record>
+</odoo>

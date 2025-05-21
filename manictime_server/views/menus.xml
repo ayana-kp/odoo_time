@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu Items -->
+    <menuitem id="menu_manictime_root" name="ManicTime" sequence="100" web_icon="manictime_server,static/description/icon.png"/>
+    
+    <!-- My Data Submenu -->
+    <menuitem id="menu_manictime_my_data" name="My ManicTime" parent="menu_manictime_root" sequence="10"/>
+    <menuitem id="menu_manictime_my_activities" name="My Activities" parent="menu_manictime_my_data" action="action_manictime_my_activities" sequence="10"/>
+    <menuitem id="menu_manictime_my_tags" name="My Tags" parent="menu_manictime_my_data" action="action_manictime_my_tags" sequence="20"/>
+    <menuitem id="menu_manictime_my_timelines" name="My Timelines" parent="menu_manictime_my_data" action="action_manictime_my_timelines" sequence="30"/>
+    <menuitem id="menu_manictime_my_environments" name="My Environments" parent="menu_manictime_my_data" action="action_manictime_my_environment" sequence="40"/>
+    
+    <!-- All Data Submenu (Manager) -->
+    <menuitem id="menu_manictime_all_data" name="All ManicTime Data" parent="menu_manictime_root" sequence="20" groups="manictime_server.group_manictime_manager"/>
+    <menuitem id="menu_manictime_all_activities" name="All Activities" parent="menu_manictime_all_data" action="action_manictime_all_activities" sequence="10"/>
+    <menuitem id="menu_manictime_all_tags" name="All Tags" parent="menu_manictime_all_data" action="action_manictime_all_tags" sequence="20"/>
+    <menuitem id="menu_manictime_all_timelines" name="All Timelines" parent="menu_manictime_all_data" action="action_manictime_all_timelines" sequence="30"/>
+    <menuitem id="menu_manictime_all_environments" name="Environments" parent="menu_manictime_all_data" action="action_manictime_environment" sequence="40"/>
+    
+    <!-- Configuration Menu -->
+    <menuitem id="menu_manictime_config" name="Configuration" parent="menu_manictime_root" sequence="100" groups="manictime_server.group_manictime_manager"/>
+    <menuitem id="menu_manictime_user_config" name="User Configurations" parent="menu_manictime_config" action="action_manictime_config" sequence="10"/>
+    <menuitem id="menu_manictime_schemas" name="Schemas" parent="menu_manictime_config" action="action_manictime_schema" sequence="15"/>
+    <menuitem id="menu_manictime_links" name="API Capabilities" parent="menu_manictime_config" action="action_manictime_link" sequence="20"/>
+    
+    <!-- Settings Menu (Top Level) -->
+    <menuitem id="menu_manictime_settings" name="Settings" parent="menu_manictime_root" action="manictime_server.manictime_config_settings_action" sequence="110" groups="manictime_server.group_manictime_manager"/>
+</odoo>

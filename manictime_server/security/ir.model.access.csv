@@ -1,0 +1,16 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_manictime_activity_user,manictime.activity.user,model_manictime_activity,group_manictime_user,1,1,1,0
+access_manictime_activity_manager,manictime.activity.manager,model_manictime_activity,group_manictime_manager,1,1,1,1
+access_manictime_user_timeline_user,manictime.user.timeline.user,model_manictime_user_timeline,group_manictime_user,1,1,1,0
+access_manictime_user_timeline_manager,manictime.user.timeline.manager,model_manictime_user_timeline,group_manictime_manager,1,1,1,1
+access_manictime_tag_combination_user,manictime.tag.combination.user,model_manictime_tag_combination,group_manictime_user,1,1,1,0
+access_manictime_tag_combination_manager,manictime.tag.combination.manager,model_manictime_tag_combination,group_manictime_manager,1,1,1,1
+access_manictime_token_storage_admin,manictime.token.storage.admin,model_manictime_token_storage,base.group_system,1,1,1,1
+access_manictime_config_user,manictime.config.user,model_manictime_config,group_manictime_user,1,0,0,0
+access_manictime_config_manager,manictime.config.manager,model_manictime_config,group_manictime_manager,1,1,1,1
+access_manictime_schema_user,manictime.schema.user,model_manictime_schema,group_manictime_user,1,0,0,0
+access_manictime_schema_manager,manictime.schema.manager,model_manictime_schema,group_manictime_manager,1,1,1,1
+access_manictime_environment_user,manictime.environment.user,model_manictime_environment,group_manictime_user,1,0,0,0
+access_manictime_environment_manager,manictime.environment.manager,model_manictime_environment,group_manictime_manager,1,1,1,1
+access_manictime_link_user,manictime.link.user,model_manictime_link,group_manictime_user,1,1,1,0
+access_manictime_link_manager,manictime.link.manager,model_manictime_link,group_manictime_manager,1,1,1,1

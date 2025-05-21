@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ManicTime User Timeline Form View -->
+    <record id="view_manictime_user_timeline_form" model="ir.ui.view">
+        <field name="name">manictime.user.timeline.form</field>
+        <field name="model">manictime.user.timeline</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <header>
+                    <button name="action_view_activities" string="View Activities" type="object" class="btn-primary"/>
+                    <button name="action_sync_timeline" string="Sync Timeline" type="object" class="btn-secondary"/>
+                    <button name="toggle_selection" string="Toggle Selection" type="object" class="btn-secondary"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Timeline Information">
+                            <field name="timeline_type"/>
+                            <field name="environment_id"/>
+                            <field name="schema_id"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group string="Sync Information">
+                            <field name="is_selected"/>
+                            <field name="last_sync"/>
+                            <field name="activity_count" widget="statinfo"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Technical Information" groups="base.group_no_one">
+                            <group>
+                                <field name="timeline_id"/>
+                                <field name="timeline_key"/>
+                                <field name="environment_id_str"/>
+                                <field name="owner_username"/>
+                                <field name="owner_display_name"/>
+                                <field name="publish_key"/>
+                                <field name="update_protocol"/>
+                                <field name="timestamp"/>
+                                <field name="last_change_id"/>
+                                <field name="last_update"/>
+                                <field name="device_display_name"/>
+                            </group>
+                            <group string="API Capabilities">
+                                <field name="link_ids" widget="many2many_tags"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ManicTime User Timeline List View -->
+    <record id="view_manictime_user_timeline_list" model="ir.ui.view">
+        <field name="name">manictime.user.timeline.list</field>
+        <field name="model">manictime.user.timeline</field>
+        <field name="arch" type="xml">
+            <list create="false" decoration-success="last_sync and is_selected" decoration-muted="not is_selected">
+                <field name="name" decoration-bf="1"/>
+                <field name="timeline_type"/>
+                <field name="schema_id"/>
+                <field name="environment_id"/>
+                <field name="activity_count" string="Activities"/>
+                <field name="last_sync"/>
+                <button name="action_view_activities" type="object" icon="fa-clock-o" string="View Activities"/>
+                <button name="action_sync_timeline" type="object" icon="fa-refresh" string="Sync"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ManicTime User Timeline Embedded List View -->
+    <record id="view_manictime_user_timeline_embedded" model="ir.ui.view">
+        <field name="name">manictime.user.timeline.embedded</field>
+        <field name="model">manictime.user.timeline</field>
+        <field name="arch" type="xml">
+            <list editable="bottom" decoration-success="last_sync" decoration-muted="not last_sync">
+                <field name="name"/>
+                <field name="timeline_type"/>
+                <field name="is_selected"/>
+                <field name="last_sync"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ManicTime User Timeline Search View -->
+    <record id="view_manictime_user_timeline_search" model="ir.ui.view">
+        <field name="name">manictime.user.timeline.search</field>
+        <field name="model">manictime.user.timeline</field>
+        <field name="arch" type="xml">
+            <search string="Search Timelines">
+                <field name="name"/>
+                <field name="timeline_type"/>
+                <field name="timeline_key" groups="base.group_no_one"/>
+                <field name="timeline_id" groups="base.group_no_one"/>
+                <field name="environment_id"/>
+                <field name="last_sync"/>
+                <field name="schema_id"/>
+                <field name="user_id"/>
+                <filter string="Selected" name="selected" domain="[('is_selected', '=', True)]"/>
+                <filter string="Synced" name="synced" domain="[('last_sync', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Environment" name="group_by_environment" context="{'group_by': 'environment_id'}"/>
+                    <filter string="Timeline Type" name="group_by_type" context="{'group_by': 'timeline_type'}"/>
+                    <filter string="Schema" name="group_by_schema" context="{'group_by': 'schema_id'}"/>
+                    <filter string="User" name="group_by_user" context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Actions -->
+    <!-- My Timelines -->
+    <record id="action_manictime_my_timelines" model="ir.actions.act_window">
+        <field name="name">My Timelines</field>
+        <field name="res_model">manictime.user.timeline</field>
+        <field name="path">my-manictime-timelines</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_manictime_user_timeline_list"/>
+        <field name="search_view_id" ref="view_manictime_user_timeline_search"/>
+        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="context">{'search_default_group_by_environment': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No timeline data found!
+            </p>
+            <p>
+                Use the "Connect to ManicTime" button in your user preferences to sync your timelines.
+            </p>
+        </field>
+    </record>
+    
+    <!-- All Timelines (Manager) -->
+    <record id="action_manictime_all_timelines" model="ir.actions.act_window">
+        <field name="name">All Timelines</field>
+        <field name="res_model">manictime.user.timeline</field>
+        <field name="path">all-manictime-timelines</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="view_manictime_user_timeline_list"/>
+        <field name="search_view_id" ref="view_manictime_user_timeline_search"/>
+        <field name="context">{'search_default_group_by_environment': 1}</field>
+        <field name="groups_id" eval="[(4, ref('manictime_server.group_manictime_manager'))]"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No timeline data found!
+            </p>
+            <p>
+                Users need to connect their ManicTime accounts to view timeline data.
+            </p>
+        </field>
+    </record>
+</odoo>
